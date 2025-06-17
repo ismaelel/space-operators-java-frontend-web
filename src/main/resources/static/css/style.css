@@ -1,0 +1,49 @@
+/* Fond spatial */
+.space-bg {
+    background-color: #2b4f70;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Titre */
+.space-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 5px #000;
+    color: #ffffff;
+}
+
+/* Table */
+.space-table {
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: rgba(10, 30, 60, 0.9);
+}
+
+/* Boutons */
+.btn {
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.btn-danger {
+    background-color: #ff4444;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #3366cc;
+    border: none;
+}
+
+.btn-success {
+    background-color: #33cc33;
+    border: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+    transition: all 0.2s ease-in-out;
+}
