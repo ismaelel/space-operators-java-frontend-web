@@ -1,0 +1,11 @@
+<html>
+<body>
+
+Welcome <span th:text="${session.user.username}"/>
+<br/>
+<tr th:each="user: ${users}">
+	<td th:text="${user.username}" /></td>
+</tr>
+
+</body>
+</html>
