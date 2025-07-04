@@ -2,6 +2,7 @@ package fr.cci.front.service;
 
 import java.util.List;
 
+import fr.cci.front.model.PlayerModel;
 import org.springframework.stereotype.Service;
 
 import fr.cci.front.datalayer.UserProxy;
@@ -28,7 +29,15 @@ public class UserService {
 		return userProxy.login(user);
 	}
 
-	public UserModel getUserInformation() {
+	public PlayerModel getUserInformation() {
 		return userProxy.getUserInformation();
+	}
+
+	public UserModel getUserProfile(String token) {
+		return userProxy.getUserProfile(token);
+	}
+
+	public List<UserModel> getAllUsers() {
+		return userProxy.getUsers();
 	}
 }

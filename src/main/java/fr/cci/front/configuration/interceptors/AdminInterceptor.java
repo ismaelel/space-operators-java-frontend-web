@@ -21,12 +21,12 @@ public class AdminInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 
-        UserModel user = userService.getUserInformation();
+        //UserModel user = userService.getUserInformation();
 
-        if(user == null || !user.getRoles().contains("ADMIN")) {
-            response.sendRedirect("/");
-            return false;
-        }
+//        if(user == null || !user.getRoles().contains("ADMIN")) {
+//            response.sendRedirect("/");
+//            return false;
+//        }
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

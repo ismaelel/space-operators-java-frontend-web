@@ -11,12 +11,18 @@
 <body class="space-bg text-white" style="background-color: #2b4f70">
 
 <div class="container mt-5">
-	<h1 class="text-center space-title">🧑‍🚀 Inscription</h1>
+	<h1 class="text-center space-title">Inscription</h1>
 
 	<form th:action="@{/register}" th:object="${user}" method="post" class="mt-4 p-4 bg-dark rounded shadow-lg">
+
 		<div class="mb-3">
-			<label for="username" class="form-label">Nom d'utilisateur :</label>
-			<input type="text" id="username" th:field="*{username}" class="form-control" required>
+			<label for="email" class="form-label">Adresse email :</label>
+			<input type="email" id="email" th:field="*{email}" class="form-control" required>
+		</div>
+
+		<div class="mb-3">
+			<label for="playerName" class="form-label">Nom :</label>
+			<input type="text" id="playerName" th:field="*{playerName}" class="form-control" required>
 		</div>
 
 		<div class="mb-3">
@@ -28,7 +34,11 @@
 			<input type="submit" value="🚀 S'inscrire" class="btn btn-success btn-lg">
 		</div>
 	</form>
+	<div th:if="${error}" class="alert alert-danger mt-2">
+		<p th:text="${error}"></p>
+	</div>
 </div>
+
 <p class="text-center mt-3">Déjà inscrit ? <a href="/login" class="text-info">Connecte-toi ici</a>.</p>
 
 </body>

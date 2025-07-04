@@ -31,7 +31,7 @@
 //		}
 //
 //		return new User(user.getUsername(),
-//						user.getPassword(),
+//						user.getPwd(),
 //						getGrantedAuthorities(user.getRoles()));
 //	}
 //

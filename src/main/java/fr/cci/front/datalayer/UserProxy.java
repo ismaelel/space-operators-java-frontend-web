@@ -1,12 +1,12 @@
 package fr.cci.front.datalayer;
 
 import java.util.List;
+import java.util.Map;
 
+import fr.cci.front.datalayer.util.RestAuthHelper;
+import fr.cci.front.model.PlayerModel;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,9 +16,9 @@ import fr.cci.front.model.UserModel;
 @Repository
 public class UserProxy {
 
-	private TokenContext tokenContext;
+	private final TokenContext tokenContext;
 	private final String baseApiUrl = "http://localhost:8080/api";
-	private RestTemplate restTemplate = new RestTemplate();
+	private final RestTemplate restTemplate = new RestTemplate();
 
 	public UserProxy(final TokenContext tokenContext) {
 		this.tokenContext = tokenContext;
@@ -33,48 +33,70 @@ public class UserProxy {
 
 	/** PermitAll routes **/
 	public void add(UserModel user) {
-		HttpEntity<UserModel> request = new HttpEntity<UserModel>(user);
+		System.out.println("ONESTLA + " + user.getEmail() + " + " + user.getPlayerName() + " + " + user.getPassword());
+
+		Map<String, String> payload = Map.of(
+				"email", user.getEmail(),
+				"playerName", user.getPlayerName(),
+				"password", user.getPassword()
+		);
+
+		System.out.println("ONESTLA2 + " + user.getEmail() + " + " + user.getPlayerName() + " + " + user.getPassword());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<Map<String, String>> request = new HttpEntity<>(payload, headers);
 		restTemplate.exchange(
-				baseApiUrl + "/user",
+				baseApiUrl + "/auth/register",
 				HttpMethod.POST,
 				request,
-				Void.class);
+				Void.class
+		);
 	}
 
 	public String login(UserModel user) {
-		// Warning : change UserModel object by a
-		// specific DTO to respect best practices
-		HttpEntity<UserModel> request = new HttpEntity<UserModel>(user);
-		ResponseEntity<String> response = restTemplate.exchange(
-				baseApiUrl + "/login",
+
+		System.out.println("ONESTLA + " + user.getEmail() + " + " + user.getPlayerName() + " + " + user.getPassword());
+		Map<String, String> payload = Map.of(
+				"email", user.getEmail(),
+				"password", user.getPassword()
+		);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<Map<String, String>> request = new HttpEntity<>(payload, headers);
+
+		ResponseEntity<Map<String, String>> response = restTemplate.exchange(
+				baseApiUrl + "/auth/login",
 				HttpMethod.POST,
 				request,
-				String.class);
-		return response.getBody();
+				new ParameterizedTypeReference<>() {}
+		);
+
+		return response.getBody().get("token");
 	}
 
 	/** Secured routes **/
-	public List<UserModel> getUsers() {
+	public List<UserModel> getUsers1() {
+		RestAuthHelper authHelper = new RestAuthHelper(tokenContext.getToken());
+		HttpEntity<Void> request = authHelper.buildAuthEntity();
 
-		HttpEntity request = new HttpEntity<>(
-				createTokenHeader(
-						tokenContext.getToken()));
-
-		ResponseEntity<List<UserModel>> response =
-				restTemplate.exchange(
-						baseApiUrl + "/user",
-						HttpMethod.GET,
-						request,
-						new ParameterizedTypeReference<List<UserModel>>() {});
+		ResponseEntity<List<UserModel>> response = restTemplate.exchange(
+				//baseApiUrl + "/user",
+				baseApiUrl + "/users",
+				HttpMethod.GET,
+				request,
+				new ParameterizedTypeReference<List<UserModel>>() {}
+		);
 
 		return response.getBody();
 	}
 
 	public UserModel getUserByUsername(String username) {
-
-		HttpEntity request = new HttpEntity<>(
-				createTokenHeader(
-						tokenContext.getToken()));
+		RestAuthHelper authHelper = new RestAuthHelper(tokenContext.getToken());
+		HttpEntity<Void> request = authHelper.buildAuthEntity();
 
 		ResponseEntity<UserModel> response = restTemplate.exchange(
 				baseApiUrl + "/user/" + username,
@@ -86,11 +108,32 @@ public class UserProxy {
 		return response.getBody();
 	}
 
-	public UserModel getUserInformation() {
+	public PlayerModel getUserInformation() {
+//		HttpEntity<Void> request = new HttpEntity<>(
+//				createTokenHeader(tokenContext.getToken())
+//		);
+		System.out.println("TOKEN AVAVA = " + tokenContext.getToken());
 
-		HttpEntity request = new HttpEntity<>(
-				createTokenHeader(
-						tokenContext.getToken()));
+		RestAuthHelper authHelper = new RestAuthHelper(tokenContext.getToken());
+
+		HttpEntity<Void> request = authHelper.buildAuthEntity();
+
+		ResponseEntity<PlayerModel> response = restTemplate.exchange(
+				//baseApiUrl + "/me",
+				baseApiUrl + "/player/profile2",
+				HttpMethod.GET,
+				request,
+				PlayerModel.class
+		);
+
+		System.out.println("2606 RESPONSE BODY : " + response.getBody());
+
+		return response.getBody();
+	}
+
+	public UserModel getUserProfile(String token) {
+		RestAuthHelper authHelper = new RestAuthHelper(tokenContext.getToken());
+		HttpEntity<Void> request = authHelper.buildAuthEntity();
 
 		ResponseEntity<UserModel> response = restTemplate.exchange(
 				baseApiUrl + "/me",
@@ -101,5 +144,20 @@ public class UserProxy {
 
 		return response.getBody();
 	}
+
+	public List<UserModel> getUsers() {
+		RestAuthHelper authHelper = new RestAuthHelper(tokenContext.getToken());
+		HttpEntity<Void> request = authHelper.buildAuthEntity();
+		ResponseEntity<List<UserModel>> response = restTemplate.exchange(
+				baseApiUrl + "/player/all",
+				HttpMethod.GET,
+				request,
+				new ParameterizedTypeReference<List<UserModel>>() {}
+		);
+
+		return response.getBody();
+	}
+
+
 
 }

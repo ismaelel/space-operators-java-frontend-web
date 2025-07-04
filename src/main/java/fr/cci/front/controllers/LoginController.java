@@ -1,10 +1,12 @@
 package fr.cci.front.controllers;
 
+import fr.cci.front.model.PlayerModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.view.RedirectView;
 
 import fr.cci.front.configuration.TokenContext;
@@ -25,21 +27,48 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String loginDisplay(Model model) {
+    public String loginDisplay(Model model, HttpSession session) {
+        if (session.getAttribute("jwt") != null) {
+            return "redirect:/user/profile";
+        }
         model.addAttribute("user", new UserModel());
         return "login";
     }
 
     @PostMapping("/login")
-    public RedirectView loginSubmit(@ModelAttribute UserModel user, HttpSession httpSession) {
-        String token = userService.login(user);
-        tokenContext.setToken(token);
+    public String loginSubmit(@ModelAttribute UserModel user, Model model, HttpSession httpSession) {
+        try {
+            String token = userService.login(user);
+            tokenContext.setToken(token);
 
-        UserModel connectedUser = userService.getUserInformation();
-        httpSession.setAttribute("user", connectedUser);
+            PlayerModel connectedUser = userService.getUserInformation();
 
-        return new RedirectView("/");
+            httpSession.setAttribute("user", connectedUser);
+            httpSession.setAttribute("jwt", token);
+
+            return "redirect:/user/profile";
+
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 401 || e.getStatusCode().value() == 400) {
+                model.addAttribute("error", "Email ou mot de passe incorrect.");
+            } else {
+                model.addAttribute("error", "Erreur technique : " + e.getStatusCode());
+            }
+
+            model.addAttribute("user", user); // pour pré-remplir le formulaire
+            return "login"; // reste sur login.html
+        }
+
+
     }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        tokenContext.setToken(null);
+        return "redirect:/login";
+    }
+
 
 
 }
