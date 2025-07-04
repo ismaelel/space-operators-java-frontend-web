@@ -1,5 +1,7 @@
 package fr.cci.front.controllers;
 
+import fr.cci.front.model.PlayerModel;
+import fr.cci.front.service.PlayerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,16 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.view.RedirectView;
 
-import fr.cci.front.model.UserModel;
-import fr.cci.front.service.UserService;
+
 
 @Controller
 public class RegisterController {
 
-	private UserService userService;
+	private PlayerService playerService;
 
-	public RegisterController(UserService userService) {
-		this.userService = userService;
+	public RegisterController(PlayerService playerService) {
+		this.playerService = playerService;
 	}
 
 	@GetMapping("/register")
@@ -26,14 +27,14 @@ public class RegisterController {
 		if (session.getAttribute("jwt") != null) {
 			return "redirect:/user/profile";
 		}
-		model.addAttribute("user", new UserModel());
+		model.addAttribute("user", new PlayerModel());
 		return "register";
 	}
 
 	@PostMapping("/register")
-	public String registerSubmit(@ModelAttribute UserModel user, Model model) {
+	public String registerSubmit(@ModelAttribute PlayerModel user, Model model) {
 		try {
-			userService.add(user);
+			playerService.add(user);
 			return "redirect:/login";
 		} catch (HttpClientErrorException e) {
 			if (e.getStatusCode().value() == 409) {
