@@ -12,8 +12,14 @@
 
 <div class="container mt-5">
     <h1 class="text-center space-title">Ajouter une Question</h1>
-
+    <!-- Bouton retour menu principal -->
+    <div class="mb-3 text-left">
+        <a href="/" class="btn btn-outline-light btn-lg mx-auto">🏠</a>
+    </div>
     <form th:action="@{/question}" th:object="${question}" method="post" class="mt-4 p-4 bg-dark rounded shadow-lg">
+        <p class="text-info mb-4">
+            💡 Décris ici ton idée de question, et notre IA se chargera de formuler une question claire à partir de ta description.
+        </p>
         <div class="mb-3">
             <label for="question" class="form-label">Question :</label>
             <input type="text" id="question" th:field="*{question}" class="form-control" required>

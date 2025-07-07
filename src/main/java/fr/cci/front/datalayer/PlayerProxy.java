@@ -14,7 +14,7 @@ import java.util.Map;
 @Repository
 public class PlayerProxy {
     private final TokenContext tokenContext;
-    private final String baseApiUrl = "http://localhost:8080/api";
+    private final String baseApiUrl = "http://26.195.1.69:8080/api";
     private final RestTemplate restTemplate = new RestTemplate();
 
     public PlayerProxy(final TokenContext tokenContext) {

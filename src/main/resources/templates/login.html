@@ -28,6 +28,8 @@
 			<input type="submit" value="🚀 Se connecter" class="btn btn-primary btn-lg">
 		</div>
 	</form>
+	<p class="text-center mt-3">Pas encore de compte ? <a href="/register" class="text-info">Inscris-toi ici</a>.</p>
+
 	<div th:if="${error}" class="alert alert-danger mt-2">
 		<p th:text="${error}"></p>
 	</div>

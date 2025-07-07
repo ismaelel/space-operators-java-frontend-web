@@ -1,0 +1,8 @@
+fr.cci.front
+fr.cci.front.configuration
+fr.cci.front.configuration.interceptors
+fr.cci.front.controllers
+fr.cci.front.datalayer
+fr.cci.front.datalayer.util
+fr.cci.front.model
+fr.cci.front.service

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"fr.cci.front"},{"l":"fr.cci.front.configuration"},{"l":"fr.cci.front.configuration.interceptors"},{"l":"fr.cci.front.controllers"},{"l":"fr.cci.front.datalayer"},{"l":"fr.cci.front.datalayer.util"},{"l":"fr.cci.front.model"},{"l":"fr.cci.front.service"}];updateSearchResults();

@@ -14,6 +14,10 @@
 
 <div class="container mt-5">
     <h1 class="text-center space-title">👨‍🚀 Space Operators - Mon Profil</h1>
+    <!-- Bouton retour menu principal -->
+    <div class="mb-3 text-left">
+        <a href="/" class="btn btn-outline-light btn-lg mx-auto">🏠</a>
+    </div>
 
     <div class="card bg-dark text-white shadow-lg mt-4">
         <div class="card-body">
@@ -23,18 +27,14 @@
             <h5 class="card-title">Email</h5>
             <p class="card-text" th:text="${user.email}">Email</p>
 
+            <div class=" mt-4">
+                <a th:href="@{/user/edit/{id}(id=${user.playerId})}" class="btn btn-primary btn-lg">
+                    ✏️ Modifier mon profil
+                </a>
+            </div>
         </div>
     </div>
 
-    <div class="text-center mt-4">
-        <a href="/home" class="btn btn-outline-light btn-lg">🏠 Retour à l'accueil</a>
-    </div>
-
-    <div class="text-center mt-3">
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="🚪 Se déconnecter" class="btn btn-danger btn-lg" />
-        </form>
-    </div>
 </div>
 
 </body>
