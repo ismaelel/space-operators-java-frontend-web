@@ -1,7 +1,6 @@
 package fr.cci.front.controllers;
 
 import fr.cci.front.model.QuestionModel;
-import fr.cci.front.model.UserModel;
 import fr.cci.front.service.QuestionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

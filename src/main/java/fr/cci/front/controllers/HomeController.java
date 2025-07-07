@@ -4,21 +4,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import fr.cci.front.service.UserService;
+import fr.cci.front.service.PlayerService;
 
 @Controller
 public class HomeController {
 
-	private UserService userService;
+	private PlayerService playerService;
 
-	public HomeController(final UserService userService) {
-		this.userService = userService;
+	public HomeController(final PlayerService playerService) {
+		this.playerService = playerService;
 	}
 
 	@GetMapping("/")
 	public ModelAndView home() {
 		ModelAndView mav = new ModelAndView("index");
-		mav.addObject("users", userService.get());
+		mav.addObject("users", playerService.get());
 		return mav;
 	}
 

@@ -3,7 +3,6 @@ package fr.cci.front.datalayer;
 import fr.cci.front.configuration.TokenContext;
 import fr.cci.front.datalayer.util.RestAuthHelper;
 import fr.cci.front.model.QuestionModel;
-import fr.cci.front.model.UserModel;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Repository;

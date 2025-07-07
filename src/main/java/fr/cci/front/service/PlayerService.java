@@ -3,7 +3,6 @@ package fr.cci.front.service;
 import fr.cci.front.datalayer.PlayerProxy;
 import fr.cci.front.datalayer.UserProxy;
 import fr.cci.front.model.PlayerModel;
-import fr.cci.front.model.UserModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,5 +49,9 @@ public class PlayerService {
 
     public void deletePlayer(String id) {
         playerProxy.delete(id);
+    }
+
+    public PlayerModel getUserInformation() {
+        return playerProxy.getUserInformation();
     }
 }

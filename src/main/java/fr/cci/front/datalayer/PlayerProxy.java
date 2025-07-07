@@ -3,7 +3,6 @@ package fr.cci.front.datalayer;
 import fr.cci.front.configuration.TokenContext;
 import fr.cci.front.datalayer.util.RestAuthHelper;
 import fr.cci.front.model.PlayerModel;
-import fr.cci.front.model.UserModel;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Repository;
@@ -194,5 +193,28 @@ public class PlayerProxy {
                 request,
                 Void.class
         );
+    }
+
+    public PlayerModel getUserInformation() {
+//		HttpEntity<Void> request = new HttpEntity<>(
+//				createTokenHeader(tokenContext.getToken())
+//		);
+        System.out.println("TOKEN AVAVA = " + tokenContext.getToken());
+
+        RestAuthHelper authHelper = new RestAuthHelper(tokenContext.getToken());
+
+        HttpEntity<Void> request = authHelper.buildAuthEntity();
+
+        ResponseEntity<PlayerModel> response = restTemplate.exchange(
+                //baseApiUrl + "/me",
+                baseApiUrl + "/player/profile2",
+                HttpMethod.GET,
+                request,
+                PlayerModel.class
+        );
+
+        System.out.println("2606 RESPONSE BODY : " + response.getBody());
+
+        return response.getBody();
     }
 }

@@ -3,7 +3,6 @@ package fr.cci.front.service;
 import fr.cci.front.datalayer.QuestionProxy;
 import fr.cci.front.datalayer.UserProxy;
 import fr.cci.front.model.QuestionModel;
-import fr.cci.front.model.UserModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

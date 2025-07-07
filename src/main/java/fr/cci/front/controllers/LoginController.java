@@ -1,6 +1,7 @@
 package fr.cci.front.controllers;
 
 import fr.cci.front.model.PlayerModel;
+import fr.cci.front.service.PlayerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,19 +11,17 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.view.RedirectView;
 
 import fr.cci.front.configuration.TokenContext;
-import fr.cci.front.model.UserModel;
-import fr.cci.front.service.UserService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
 
     private TokenContext tokenContext;
-    private UserService userService;
+    private PlayerService playerService;
 
-    public LoginController(final UserService userService,
+    public LoginController(final PlayerService playerService,
                            final TokenContext tokenContext) {
-        this.userService = userService;
+        this.playerService = playerService;
         this.tokenContext = tokenContext;
     }
 
@@ -31,17 +30,17 @@ public class LoginController {
         if (session.getAttribute("jwt") != null) {
             return "redirect:/user/profile";
         }
-        model.addAttribute("user", new UserModel());
+        model.addAttribute("user", new PlayerModel());
         return "login";
     }
 
     @PostMapping("/login")
-    public String loginSubmit(@ModelAttribute UserModel user, Model model, HttpSession httpSession) {
+    public String loginSubmit(@ModelAttribute PlayerModel user, Model model, HttpSession httpSession) {
         try {
-            String token = userService.login(user);
+            String token = playerService.login(user);
             tokenContext.setToken(token);
 
-            PlayerModel connectedUser = userService.getUserInformation();
+            PlayerModel connectedUser = playerService.getUserInformation();
 
             httpSession.setAttribute("user", connectedUser);
             httpSession.setAttribute("jwt", token);
