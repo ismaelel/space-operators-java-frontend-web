@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * Contrôleur gérant l'inscription des utilisateurs.
@@ -49,7 +48,7 @@ public class RegisterController {
 			return "redirect:/";
 		}
 		model.addAttribute("user", new PlayerModel());
-		return "register";
+		return "auth/register";
 	}
 
 	/**
@@ -78,7 +77,7 @@ public class RegisterController {
 				model.addAttribute("error", "Erreur technique : " + e.getStatusCode());
 			}
 			model.addAttribute("user", user);
-			return "register";
+			return "auth/register";
 		}
 	}
 }

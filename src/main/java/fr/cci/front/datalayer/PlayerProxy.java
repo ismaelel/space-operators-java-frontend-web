@@ -11,24 +11,44 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe responsable des appels REST vers l'API pour la gestion des joueurs.
+ * Sert de pont entre le service et les endpoints REST sécurisés ou publics.
+ */
 @Repository
 public class PlayerProxy {
+
     private final TokenContext tokenContext;
     private final String baseApiUrl = "http://26.195.1.69:8080/api";
     private final RestTemplate restTemplate = new RestTemplate();
 
+    /**
+     * Constructeur avec injection du contexte de token.
+     *
+     * @param tokenContext le contexte contenant le token JWT
+     */
     public PlayerProxy(final TokenContext tokenContext) {
         this.tokenContext = tokenContext;
     }
 
+    /**
+     * Crée les en-têtes HTTP avec le token d'authentification.
+     *
+     * @param token le token JWT
+     * @return les en-têtes HTTP avec autorisation
+     */
     private HttpHeaders createTokenHeader(final String token) {
-        String authHeader = "Bearer " + token;
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", authHeader);
+        headers.add("Authorization", "Bearer " + token);
         return headers;
     }
 
-    /** PermitAll routes **/
+
+    /**
+     * Inscription d’un nouvel utilisateur.
+     *
+     * @param player le joueur à enregistrer
+     */
     public void add(PlayerModel player) {
         Map<String, String> payload = Map.of(
                 "email", player.getEmail(),
@@ -48,6 +68,12 @@ public class PlayerProxy {
         );
     }
 
+    /**
+     * Authentifie un utilisateur et retourne le token JWT.
+     *
+     * @param player l’utilisateur avec email et mot de passe
+     * @return le token JWT
+     */
     public String login(PlayerModel player) {
         Map<String, String> payload = Map.of(
                 "email", player.getEmail(),
@@ -69,98 +95,56 @@ public class PlayerProxy {
         return response.getBody().get("token");
     }
 
-    /** Secured routes **/
-    public List<PlayerModel> getPlayers1() {
-        HttpEntity<Void> request = new HttpEntity<>(
-                createTokenHeader(tokenContext.getToken())
-        );
 
-        ResponseEntity<List<PlayerModel>> response = restTemplate.exchange(
-                //baseApiUrl + "/user",
-                baseApiUrl + "/users",
-                HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<List<PlayerModel>>() {}
-        );
-
-        return response.getBody();
-    }
-
-    public PlayerModel getPlayerByPlayername(String username) {
-        HttpEntity<Void> request = new HttpEntity<>(
-                createTokenHeader(tokenContext.getToken())
-        );
-
-        ResponseEntity<PlayerModel> response = restTemplate.exchange(
-                baseApiUrl + "/user/" + username,
-                HttpMethod.GET,
-                request,
-                PlayerModel.class
-        );
-
-        return response.getBody();
-    }
-
-    public PlayerModel getPlayerInformation() {
-//		HttpEntity<Void> request = new HttpEntity<>(
-//				createTokenHeader(tokenContext.getToken())
-//		);
-//		System.out.println("TOKEN AVAVA = " + tokenContext.getToken());
-
-        String token = tokenContext.getToken(); System.out.println("Playerproxy : TOKEN : " + token);
+    /**
+     * Récupère la liste de tous les joueurs.
+     *
+     * @return liste des joueurs
+     */
+    public List<PlayerModel> getPlayers() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
+        headers.setBearerAuth(tokenContext.getToken());
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
+        ResponseEntity<List<PlayerModel>> response = restTemplate.exchange(
+                baseApiUrl + "/player/all",
+                HttpMethod.GET,
+                request,
+                new ParameterizedTypeReference<>() {}
+        );
+
+        return response.getBody();
+    }
+
+    /**
+     * Récupère les informations du joueur actuellement connecté.
+     *
+     * @return informations du joueur connecté
+     */
+    public PlayerModel getUserInformation() {
+        RestAuthHelper authHelper = new RestAuthHelper(tokenContext.getToken());
+        HttpEntity<Void> request = authHelper.buildAuthEntity();
+
         ResponseEntity<PlayerModel> response = restTemplate.exchange(
-                //baseApiUrl + "/me",
                 baseApiUrl + "/player/profile2",
                 HttpMethod.GET,
                 request,
                 PlayerModel.class
         );
 
-        System.out.println("2606 RESPONSE BODY : " + response.getBody());
-
         return response.getBody();
     }
 
-    public PlayerModel getPlayerProfile(String token) {
-        HttpEntity<Void> request = new HttpEntity<>(
-                createTokenHeader(tokenContext.getToken())
-        );
-
-        ResponseEntity<PlayerModel> response = restTemplate.exchange(
-                baseApiUrl + "/me",
-                HttpMethod.GET,
-                request,
-                PlayerModel.class
-        );
-
-        return response.getBody();
-    }
-
-    public List<PlayerModel> getPlayers() {
-        String token = tokenContext.getToken();
-        System.out.println("DASHBOARD TOKEN : " + token); // pour debug
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token); // ARRET ICI
-        HttpEntity<Void> request = new HttpEntity<>(headers);
-        ResponseEntity<List<PlayerModel>> response = restTemplate.exchange(
-                baseApiUrl + "/player/all",
-                HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<List<PlayerModel>>() {}
-        );
-
-        return response.getBody();
-    }
-
+    /**
+     * Récupère les informations d’un joueur par ID.
+     *
+     * @param id identifiant du joueur
+     * @return joueur correspondant
+     */
     public PlayerModel getById(String id) {
         RestAuthHelper helper = new RestAuthHelper(tokenContext.getToken());
         HttpEntity<Void> request = helper.buildAuthEntity();
-        System.out.println("TOLKIEN + " + tokenContext.getToken());
+
         ResponseEntity<PlayerModel> response = restTemplate.exchange(
                 baseApiUrl + "/player/" + id,
                 HttpMethod.GET,
@@ -171,6 +155,11 @@ public class PlayerProxy {
         return response.getBody();
     }
 
+    /**
+     * Met à jour les informations d’un joueur.
+     *
+     * @param player joueur à mettre à jour
+     */
     public void update(PlayerModel player) {
         RestAuthHelper helper = new RestAuthHelper(tokenContext.getToken());
         HttpEntity<PlayerModel> request = helper.buildJsonEntity(player);
@@ -183,6 +172,11 @@ public class PlayerProxy {
         );
     }
 
+    /**
+     * Supprime un joueur par son identifiant.
+     *
+     * @param id identifiant du joueur à supprimer
+     */
     public void delete(String id) {
         RestAuthHelper helper = new RestAuthHelper(tokenContext.getToken());
         HttpEntity<Void> request = helper.buildAuthEntity();
@@ -195,25 +189,58 @@ public class PlayerProxy {
         );
     }
 
-    public PlayerModel getUserInformation() {
-//		HttpEntity<Void> request = new HttpEntity<>(
-//				createTokenHeader(tokenContext.getToken())
-//		);
-        System.out.println("TOKEN AVAVA = " + tokenContext.getToken());
-
-        RestAuthHelper authHelper = new RestAuthHelper(tokenContext.getToken());
-
-        HttpEntity<Void> request = authHelper.buildAuthEntity();
+    /**
+     * Récupère le profil d’un joueur en utilisant un token spécifique.
+     *
+     * @param token token JWT à utiliser (non utilisé ici)
+     * @return joueur correspondant
+     */
+    public PlayerModel getPlayerProfile(String token) {
+        HttpEntity<Void> request = new HttpEntity<>(createTokenHeader(tokenContext.getToken()));
 
         ResponseEntity<PlayerModel> response = restTemplate.exchange(
-                //baseApiUrl + "/me",
-                baseApiUrl + "/player/profile2",
+                baseApiUrl + "/me",
                 HttpMethod.GET,
                 request,
                 PlayerModel.class
         );
 
-        System.out.println("2606 RESPONSE BODY : " + response.getBody());
+        return response.getBody();
+    }
+
+    /**
+     * Récupère un joueur par son nom d’utilisateur.
+     *
+     * @param username le nom du joueur
+     * @return joueur correspondant
+     */
+    public PlayerModel getPlayerByPlayername(String username) {
+        HttpEntity<Void> request = new HttpEntity<>(createTokenHeader(tokenContext.getToken()));
+
+        ResponseEntity<PlayerModel> response = restTemplate.exchange(
+                baseApiUrl + "/user/" + username,
+                HttpMethod.GET,
+                request,
+                PlayerModel.class
+        );
+
+        return response.getBody();
+    }
+
+    /**
+     * Ancienne méthode (non utilisée ?) pour récupérer la liste des joueurs.
+     *
+     * @return liste des joueurs
+     */
+    public List<PlayerModel> getPlayers1() {
+        HttpEntity<Void> request = new HttpEntity<>(createTokenHeader(tokenContext.getToken()));
+
+        ResponseEntity<List<PlayerModel>> response = restTemplate.exchange(
+                baseApiUrl + "/users",
+                HttpMethod.GET,
+                request,
+                new ParameterizedTypeReference<>() {}
+        );
 
         return response.getBody();
     }

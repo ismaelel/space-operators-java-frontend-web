@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.servlet.view.RedirectView;
 
 import fr.cci.front.configuration.TokenContext;
 import jakarta.servlet.http.HttpSession;
@@ -56,7 +55,7 @@ public class LoginController {
             return "redirect:/";
         }
         model.addAttribute("user", new PlayerModel());
-        return "login";
+        return "auth/login";
     }
 
     /**
@@ -93,7 +92,7 @@ public class LoginController {
             }
 
             model.addAttribute("user", user); // pour pré-remplir le formulaire
-            return "login"; // reste sur login.html
+            return "auth/login"; // reste sur login.html
         }
     }
 

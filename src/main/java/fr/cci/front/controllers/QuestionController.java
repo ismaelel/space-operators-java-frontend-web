@@ -36,7 +36,7 @@ public class QuestionController {
     @GetMapping("/question")
     public String questionMake(Model model) {
         model.addAttribute("question", new QuestionModel());
-        return "question";
+        return "question/question";
     }
 
     /**
@@ -58,7 +58,7 @@ public class QuestionController {
      */
     @GetMapping("/questions")
     public ModelAndView questions() {
-        ModelAndView mav = new ModelAndView("questions");
+        ModelAndView mav = new ModelAndView("question/questions");
         mav.addObject("questions", questionService.get());
         return mav;
     }
@@ -86,7 +86,7 @@ public class QuestionController {
     public String editQuestionForm(@PathVariable Long id, Model model) {
         QuestionModel question = questionService.getById(id);
         model.addAttribute("question", question);
-        return "edit_question";
+        return "question/edit_question";
     }
 
     /**

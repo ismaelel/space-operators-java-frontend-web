@@ -52,13 +52,4 @@ public class HomeController {
 		return mav;
 	}
 
-	/**
-	 * Affiche la page d'administration.
-	 *
-	 * @return ModelAndView correspondant à la vue "admin"
-	 */
-	@GetMapping("/admin")
-	public ModelAndView admin() {
-		return new ModelAndView("admin");
-	}
 }

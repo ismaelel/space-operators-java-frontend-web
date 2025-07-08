@@ -9,15 +9,36 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Intercepteur qui vérifie que l'utilisateur connecté est un administrateur.
+ * <p>
+ * Si aucun utilisateur n'est connecté ou si l'utilisateur n'a pas le rôle "ROLE_ADMIN",
+ * il est redirigé vers la page de login ou la page d'accès refusé.
+ */
 @Component
 public class AdminInterceptor implements HandlerInterceptor {
 
     private final PlayerService playerService;
 
+    /**
+     * Constructeur avec injection du service joueur.
+     *
+     * @param playerService service pour récupérer les informations du joueur connecté
+     */
     public AdminInterceptor(PlayerService playerService) {
         this.playerService = playerService;
     }
 
+    /**
+     * Méthode appelée avant l'exécution du contrôleur.
+     * Vérifie que l'utilisateur connecté a le rôle administrateur.
+     *
+     * @param request  requête HTTP entrante
+     * @param response réponse HTTP sortante
+     * @param handler  handler cible (méthode contrôleur)
+     * @return true si l'utilisateur est admin, false sinon (avec redirection)
+     * @throws Exception en cas d'erreur
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
@@ -30,9 +51,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         }
 
         PlayerModel player = playerService.getUserInformation();
-        System.out.println("PLAYER + " + player);
-        System.out.println("ROLE + " + player.getRole());
-        System.out.println("ADMIN? + " + "ROLE_ADMIN".equalsIgnoreCase(player.getRole()));
+
         if (player == null || !"ROLE_ADMIN".equalsIgnoreCase(player.getRole())) {
             response.sendRedirect("/access-denied");
             return false;
@@ -40,5 +59,4 @@ public class AdminInterceptor implements HandlerInterceptor {
 
         return true;
     }
-
 }

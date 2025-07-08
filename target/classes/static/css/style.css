@@ -1,9 +1,12 @@
-/* Fond spatial */
+/* Fond spatial avec image */
 .space-bg {
     background-color: #2b4f70;
-    min-height: 100vh;
+    background-image: url("/images/space-background.png");
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    color: white;
 }
 
 /* Titre */
@@ -24,7 +27,7 @@
 /* Boutons */
 .btn {
     border-radius: 8px;
-    font-weight: bold;
+   /* font-weight: bold; */
 }
 
 .btn-danger {

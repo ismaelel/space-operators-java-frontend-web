@@ -2,6 +2,7 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- ✅ Important pour le responsive -->
 	<title>Accueil - Space Operators</title>
 
 	<!-- Bootstrap -->
@@ -15,26 +16,34 @@
 </head>
 <body class="space-bg text-white">
 
-<div class="container d-flex flex-column align-items-center justify-content-center py-5">
-	<h1 class="space-title mb-4 text-center">🚀 Space Operators</h1>
-	<p class="fs-4 text-center">Bienvenue <span th:text="${session.user.playerName}">Pilote</span> !</p>
-
-	<div th:if="${error}" class="alert alert-danger mt-3 text-center">
-
-    <span th:switch="${error}">
-        <span th:case="'unauthorized'">🚫 Accès non autorisé.</span>
-        <span th:case="'forbidden'">⛔ Action interdite.</span>
-        <span th:case="*">❗ Erreur inconnue.</span>
-    </span>
+<div class="container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center py-4 px-3">
+	<!-- Logo + icône -->
+	<div class="d-flex align-items-center justify-content-center mb-4 flex-wrap text-center">
+		<img src="/images/iconLogo.png" alt="Icône" style="height: 50px;" class="me-2 mb-2">
+		<img src="/images/logo.png" alt="Logo Space Operators" style="height: 80px;" class="mb-2">
 	</div>
-	<div class="mt-4 bg-dark bg-opacity-75 rounded shadow-lg p-5 w-100" style="max-width: 400px;">
-		<div class="d-grid gap-3">
-			<a href="/questions" class="btn btn-primary btn-lg w-100">📋 Afficher les Questions</a>
-			<a href="/question" class="btn btn-primary btn-lg w-100">➕ Ajouter une Question</a>
-			<a href="/user/profile" class="btn btn-info btn-lg w-100 text-white">👤 Mon Profil</a>
 
-			<!-- Affiché seulement si l'utilisateur est admin -->
-			<a href="/user/dashboard" class="btn btn-info btn-lg w-100"
+	<!-- Bienvenue -->
+	<p class="fs-5 text-center">Bienvenue <span th:text="${session.user.playerName}">Pilote</span> !</p>
+
+	<!-- Erreur -->
+	<div th:if="${error}" class="alert alert-danger mt-3 text-center w-100" style="max-width: 400px;">
+        <span th:switch="${error}">
+            <span th:case="'unauthorized'">🚫 Accès non autorisé.</span>
+            <span th:case="'forbidden'">⛔ Action interdite.</span>
+            <span th:case="*">❗ Erreur inconnue.</span>
+        </span>
+	</div>
+
+	<!-- Bloc de boutons -->
+	<div class="mt-4 bg-dark bg-opacity-75 rounded shadow-lg p-4 w-100" style="max-width: 400px;">
+		<div class="d-grid gap-3">
+			<a href="/questions" class="btn btn-danger btn-lg w-100">📋 Afficher les Questions</a>
+			<a href="/question" class="btn btn-danger btn-lg w-100">➕ Ajouter une Question</a>
+			<a href="/user/profile" class="btn btn-danger btn-lg w-100 text-white">👤 Mon Profil</a>
+
+			<!-- Admin uniquement -->
+			<a href="/user/dashboard" class="btn btn-danger btn-lg w-100"
 			   th:if="${session.user.role == 'ROLE_ADMIN'}">🧑‍🚀 Dashboard Utilisateurs</a>
 
 			<form th:action="@{/logout}" method="post" class="w-100">

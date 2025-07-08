@@ -1,30 +1,79 @@
 package fr.cci.front.model;
 
+/**
+ * Modèle représentant un joueur (Player).
+ * Sert à la fois pour l’authentification, l’administration et le jeu lui-même.
+ */
 public class PlayerModel {
+
+    /**
+     * Identifiant unique du joueur (UUID ou autre).
+     */
     private String playerId;
+
+    /**
+     * Nom ou pseudo du joueur.
+     */
     private String playerName;
+
+    /**
+     * État de préparation du joueur (utile en phase de matchmaking ou de lobby).
+     */
     private Boolean isReady;
-    //private String name;
+
+    /**
+     * Nombre total de parties jouées par le joueur.
+     */
     private Long gamesPlayed;
+
+    /**
+     * Rôle du joueur (ex: "ROLE_USER", "ROLE_ADMIN").
+     */
     private String role;
+
+    /**
+     * Adresse email du joueur (utilisée pour l’authentification).
+     */
     private String email;
+
+    /**
+     * Mot de passe du joueur (non stocké en base ici, utilisé uniquement côté client).
+     */
     private String password;
 
-    public PlayerModel() {
-    }
+    /**
+     * Constructeur vide par défaut.
+     */
+    public PlayerModel() {}
 
-    public PlayerModel(String playerId, Boolean isReady, String name, Long gamesPlayed, String role, String email, String password) {
+    /**
+     * Constructeur principal.
+     *
+     * @param playerId     identifiant du joueur
+     * @param isReady      état de préparation
+     * @param playerName   nom/pseudo du joueur
+     * @param gamesPlayed  nombre de parties jouées
+     * @param role         rôle (ADMIN/USER)
+     * @param email        adresse email
+     * @param password     mot de passe
+     */
+    public PlayerModel(String playerId, Boolean isReady, String playerName, Long gamesPlayed, String role, String email, String password) {
         this.playerId = playerId;
         this.playerName = playerName;
         this.isReady = isReady;
-        // this.name = name;
         this.gamesPlayed = gamesPlayed;
         this.role = role;
         this.email = email;
         this.password = password;
     }
 
-    // Constructeurs, getters et setters
+    /**
+     * Constructeur simplifié.
+     *
+     * @param playerId   identifiant
+     * @param playerName nom
+     * @param isReady    état prêt ou non
+     */
     public PlayerModel(String playerId, String playerName, Boolean isReady) {
         this.playerId = playerId;
         this.playerName = playerName;
@@ -54,27 +103,6 @@ public class PlayerModel {
     public void setReady(Boolean ready) {
         isReady = ready;
     }
-
-    @Override
-    public String toString() {
-        return "PlayerModel{" +
-                "playerId='" + playerId + '\'' +
-                ", isReady=" + isReady +
-                ", playerName='" + playerName + '\'' +
-                ", gamesPlayed=" + gamesPlayed +
-                ", role='" + role + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
-
-
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
 
     public Long getGamesPlayed() {
         return gamesPlayed;
@@ -106,5 +134,22 @@ public class PlayerModel {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Représentation textuelle de l’objet, sans mot de passe.
+     *
+     * @return chaîne lisible pour debug ou logs
+     */
+    @Override
+    public String toString() {
+        return "PlayerModel{" +
+                "playerId='" + playerId + '\'' +
+                ", isReady=" + isReady +
+                ", playerName='" + playerName + '\'' +
+                ", gamesPlayed=" + gamesPlayed +
+                ", role='" + role + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
