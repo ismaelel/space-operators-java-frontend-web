@@ -47,6 +47,11 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(roleInterceptor)
-                .addPathPatterns("/user/dashboard"); // Intercepte uniquement cette route
+                .addPathPatterns("/**") // Intercepte tout
+                .excludePathPatterns(
+                        "/login", "/register",
+                        "/css/**", "/js/**", "/images/**", "/webjars/**",
+                        "/error", "/access-denied"
+                );
     }
 }

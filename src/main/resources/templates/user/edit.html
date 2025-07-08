@@ -31,7 +31,7 @@
             <input type="email" class="form-control" th:field="*{email}" required>
         </div>
 
-        <div class="mb-3" th:if="${session.user.role == 'ROLE_ADMIN'}">
+        <div class="mb-3" >
             <label class="form-label">Rôle</label>
             <select class="form-select" th:field="*{role}">
                 <option value="ROLE_USER">Utilisateur</option>

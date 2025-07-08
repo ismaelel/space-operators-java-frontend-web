@@ -9,14 +9,16 @@
   <!-- Custom style -->
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="space-bg text-white" style="background-color: #2b4f70">
+<body class="space-bg text-white">
 
 <div class="container mt-5">
   <h1 class="text-center space-title">Space Operators - Questions</h1>
-  <!-- Bouton retour menu principal -->
+
+  <!-- Bouton retour -->
   <div class="mb-3 text-left">
     <a href="/" class="btn btn-outline-light btn-lg mx-auto">🏠</a>
   </div>
+
   <div class="alert alert-info mt-4 shadow-sm">
     🤖 Les questions ci-dessous ont été générées par l’IA à partir de vos descriptions.
     <br>
@@ -26,11 +28,14 @@
     Exemple : <em>Appuie sur les boutons suivants ; bleu, vert, rouge</em>
   </div>
 
+  <!-- Tableau -->
   <table class="table table-dark table-bordered rounded mt-4 space-table shadow-lg">
     <thead>
     <tr>
       <th>ID</th>
       <th>Question</th>
+      <th>Options</th>
+      <th>Bonne(s) Réponse(s)</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -39,8 +44,15 @@
       <td th:text="${question.id}"></td>
       <td th:text="${question.question}"></td>
       <td>
+        <ul class="mb-0">
+          <li th:each="opt : ${question.options}" th:text="${opt}"></li>
+        </ul>
+      </td>
+      <td th:text="${question.correctOptionIndex}"></td>
+      <td>
         <div class="d-flex gap-2">
-          <form th:action="@{/question/delete/{id}(id=${question.id})}" method="post">
+          <form th:action="@{/question/delete/{id}(id=${question.id})}" method="post"
+                onsubmit="return confirm('❗ Voulez-vous vraiment supprimer cette question ?');">
             <button type="submit" class="btn btn-danger">❌</button>
           </form>
           <a th:href="@{/question/edit/{id}(id=${question.id})}" class="btn btn-primary">✏️</a>
@@ -50,6 +62,7 @@
     </tbody>
   </table>
 
+  <!-- Bouton ajout -->
   <div class="text-center mt-4">
     <a href="/question" class="btn btn-success btn-lg shadow">➕ Nouvelle Question</a>
   </div>

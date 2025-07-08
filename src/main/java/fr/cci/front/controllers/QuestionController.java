@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import java.util.List;
 
 /**
  * Contrôleur Spring MVC gérant les opérations CRUD sur les questions.
@@ -36,6 +37,7 @@ public class QuestionController {
     @GetMapping("/question")
     public String questionMake(Model model) {
         model.addAttribute("question", new QuestionModel());
+
         return "question/question";
     }
 
@@ -47,6 +49,8 @@ public class QuestionController {
      */
     @PostMapping("/question")
     public RedirectView question(@ModelAttribute QuestionModel question) {
+        System.out.println("QDébut : " + question);
+
         questionService.add(question);
         return new RedirectView("/questions");
     }
@@ -85,6 +89,26 @@ public class QuestionController {
     @GetMapping("/question/edit/{id}")
     public String editQuestionForm(@PathVariable Long id, Model model) {
         QuestionModel question = questionService.getById(id);
+        // 🔍 Log complet de la question pour debug
+        System.out.println("===== Question à éditer =====");
+
+        if (question.getOptions() == null || question.getOptions().isEmpty()) {
+            System.out.println("Aucune option détectée, initialisation à vide...");
+
+            question.setOptions(List.of("", "", "", ""));
+        } else {
+            System.out.println("Options :");
+            int i = 0;
+            for (String opt : question.getOptions()) {
+                System.out.println("  Option " + i + " : " + opt);
+                i++;
+            }
+
+            // Si moins de 4 options, compléter avec des champs vides
+            while (question.getOptions().size() < 4) {
+                question.getOptions().add("");
+            }
+        }
         model.addAttribute("question", question);
         return "question/edit_question";
     }
