@@ -44,6 +44,7 @@ public class HomeController {
 	@GetMapping("/")
 	public ModelAndView home(HttpSession session, @RequestParam(required = false) String error) {
 		if (session.getAttribute("user") == null) {
+			session.invalidate();
 			return new ModelAndView("redirect:/login");
 		}
 		ModelAndView mav = new ModelAndView("index");

@@ -104,7 +104,11 @@ public class LoginController {
      */
     @PostMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate();
+        if (session != null) {
+            session.removeAttribute("jwt");
+            session.removeAttribute("user");
+            session.invalidate();
+        }
         tokenContext.setToken(null);
         return "redirect:/login";
     }

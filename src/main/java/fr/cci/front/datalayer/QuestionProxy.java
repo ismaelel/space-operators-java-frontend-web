@@ -17,7 +17,9 @@ import java.util.List;
 @Repository
 public class QuestionProxy {
 
-    private final String baseApiUrl = "http://26.195.1.69:8080/api";
+    //private final String baseApiUrl = "http://26.195.1.69:8080/api";
+    private final String baseApiUrl = "http://localhost:8080/api";
+
     private final RestTemplate restTemplate = new RestTemplate();
     private final TokenContext tokenContext;
 

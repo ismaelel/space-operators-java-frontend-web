@@ -43,6 +43,11 @@ public class UserController {
     @GetMapping("/profile")
     public String userProfile(Model model, HttpSession session) {
         String token = (String) session.getAttribute("jwt");
+        if (token == null || token.isBlank()) {
+            System.out.println("token is null or empty2");
+            return "redirect:/login?error=session-expired";
+        }
+
         tokenContext.setToken(token);
 
         PlayerModel playerProfile = playerService.getUserInformation();
