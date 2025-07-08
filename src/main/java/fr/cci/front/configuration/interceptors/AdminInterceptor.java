@@ -53,10 +53,23 @@ public class AdminInterceptor implements HandlerInterceptor {
         PlayerModel player = playerService.getUserInformation();
 
         if (player == null || !"ROLE_ADMIN".equalsIgnoreCase(player.getRole())) {
+            clearSessionAndCookie(request, response);
+
             response.sendRedirect("/access-denied");
             return false;
         }
 
         return true;
+    }
+
+    private void clearSessionAndCookie(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        if (session != null) session.invalidate();
+
+        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("JSESSIONID", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
     }
 }

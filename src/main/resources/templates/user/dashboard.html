@@ -51,7 +51,8 @@
                 <div class="d-flex gap-2">
                     <a th:href="@{/user/edit/{id}(id=${user.playerId})}" class="btn btn-primary">✏️</a>
                     <form th:if="${user.playerId != session.user.playerId}"
-                          th:action="@{/user/delete/{id}(id=${user.playerId})}" method="post">
+                          th:action="@{/user/delete/{id}(id=${user.playerId})}" method="post"
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.');">
                         <button type="submit" class="btn btn-danger">❌</button>
                     </form>
                 </div>
